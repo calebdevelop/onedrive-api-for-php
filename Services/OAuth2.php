@@ -19,13 +19,6 @@ class OAuth2
 
     private $redirectUri;
 
-    /**
-     * - authorizationUri
-     *   The authorization server's HTTP endpoint capable of
-     *   authenticating the end-user and obtaining authorization.
-     *
-     * @var \Psr\Http\Message\UriInterface
-     */
     private $authorizationUri;
 
     private $tokenCredentialUri;
@@ -44,10 +37,10 @@ class OAuth2
         ], $config);
 
         $this->setAuthorizationUri($opts['authorizationUri']);
-        $this->setRedirectUri($opts['redirectUri']);
+        $this->setRedirectUri($opts['redirect_uri']);
         $this->setTokenCredentialUri($opts['tokenCredentialUri']);
-        $this->setClientId($opts['clientId']);
-        $this->setClientSecret($opts['clientSecret']);
+        $this->setClientId($opts['client_id']);
+        $this->setClientSecret($opts['client_secret']);
     }
 
     public function buildFullAuthorizationUri(array $config = [])

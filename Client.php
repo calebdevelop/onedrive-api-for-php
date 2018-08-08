@@ -47,7 +47,7 @@ class Client
     {
         $this->setClientId($config['client_id']);
         $this->setClientSecret($config['client_secret']);
-        if (isset($config['redirect_uris'])) {
+        if (isset($config['redirect_uri'])) {
             $this->setRedirectUri($config['redirect_uri']);
         }
     }
@@ -90,6 +90,14 @@ class Client
 
         return $auth->buildFullAuthorizationUri($params);
     }
+    public function fetchAccessTokenWithAuthCode($code)
+    {
+        if (strlen($code) == 0) {
+            throw new \InvalidArgumentException("Invalid code");
+        }
+        
+    }
+
 
     public function getOAuth2Service()
     {
@@ -107,11 +115,11 @@ class Client
     {
         $auth = new OAuth2(
             [
-                'clientId'           => $this->getClientId(),
-                'clientSecret'       => $this->getClientSecret(),
+                'client_id'           => $this->getClientId(),
+                'client_secret'       => $this->getClientSecret(),
                 'authorizationUri'   => self::AUTH_URL,
                 'tokenCredentialUri' => self::TOKEN_URL,
-                'redirectUri'        => $this->getRedirectUri(),
+                'redirect_uri'        => $this->getRedirectUri(),
                 'base_uri'           => self::API_BASE_PATH
             ]
         );
