@@ -2,7 +2,9 @@
 namespace Tsk\OneDrive;
 
 
+use GuzzleHttp\Psr7\Request;
 use Tsk\OneDrive\Services\OAuth2;
+use Tsk\OneDrive\Utils\HttpBuilder;
 
 class Client
 {
@@ -150,6 +152,20 @@ class Client
         );
 
         return $auth;
+    }
+
+    /**
+     * @param $request Request
+     * @param null $expectedClass
+     */
+    public function send($request, $expectedClass = null) {
+        $http = $this->getHttpClient();
+
+        //to do refresh token if expire
+
+        $token = $this->getAccessToken();
+        $request->withHeader('Authorization', 'Bearer ' . $token['access_token']);
+        return HttpBuilder::getResponse($http, $request, $expectedClass);
     }
 
     public function setClientId($clientId) {

@@ -64,13 +64,8 @@ class OAuth2
      */
     public function fetchAuthToken($http) {
         $request = $this->generateAccessTokenRequest();
-        try {
-            $response = $http->send($request);
-            return $this->parseTokenFromResponse($response);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            echo $e->getMessage();
-        }
-        return;
+        $response = $http->send($request);
+        return $this->parseTokenFromResponse($response);
     }
 
     /**
