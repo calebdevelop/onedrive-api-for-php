@@ -16,13 +16,15 @@
     "php": "^5.6 || ^7.0",
     "guzzlehttp/guzzle": "^6.3"
   },
-  "psr-4": {
-    "Tsk\\OneDrive\\": ""
+  "autoload": {
+    "psr-4": {
+      "Tsk\\OneDrive\\": ""
+    }
   },
   "minimum-stability": "dev",
   "extra": {
     "branch-alias": {
-      "dev-master": "1.x-dev"
+      "dev-master": "1.0-dev"
     }
   }
 }
