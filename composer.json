@@ -1,7 +1,9 @@
 {
   "name": "tarask/onedrive",
+  "type": "library",
   "description": "Microsoft oneGraph Api - OneDrive for PHP",
   "keywords": ["OneDrive api", "Microsoft graph", "OneDrive Rest api"],
+  "homepage": "https://github.com/calebdevelop/onedrive-api",
   "license": "MIT",
   "minimum-stability": "dev",
   "authors": [
@@ -18,5 +20,10 @@
   },
   "psr-4": {
     "Tsk\\OneDrive\\": ""
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
   }
 }
