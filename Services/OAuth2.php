@@ -11,7 +11,9 @@ namespace Tsk\OneDrive\Services;
 
 use function GuzzleHttp\Psr7\build_query;
 use function GuzzleHttp\Psr7\parse_query;
+use GuzzleHttp\Psr7\Request;
 use function GuzzleHttp\Psr7\uri_for;
+use Psr\Http\Message\ResponseInterface;
 
 class OAuth2
 {
@@ -24,6 +26,17 @@ class OAuth2
     private $tokenCredentialUri;
 
     private $clientSecret;
+
+    private $code;
+
+    private $refreshToken;
+
+    /**
+     * The current grant type.
+     *
+     * @var string
+     */
+    private $grantType;
 
     public function __construct(array $config)
     {
@@ -41,6 +54,81 @@ class OAuth2
         $this->setTokenCredentialUri($opts['tokenCredentialUri']);
         $this->setClientId($opts['client_id']);
         $this->setClientSecret($opts['client_secret']);
+        if (array_key_exists('refresh_token', $opts)) {
+            $this->setRefreshToken($opts['refresh_token']);
+        }
+    }
+
+    /**
+     * @param $http \GuzzleHttp\ClientInterface
+     */
+    public function fetchAuthToken($http) {
+        $request = $this->generateAccessTokenRequest();
+        try {
+            $response = $http->send($request);
+            return $this->parseTokenFromResponse($response);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            echo $e->getMessage();
+        }
+        return;
+    }
+
+    /**
+     * @param $response ResponseInterface
+     */
+    private function parseTokenFromResponse($response) {
+        $json = $response->getBody()->getContents();
+        return \GuzzleHttp\json_decode($json);
+    }
+
+    /**
+     * @return Request
+     */
+    public function generateAccessTokenRequest() {
+        $uri = $this->getTokenCredentialUri();
+        $params = [
+            'client_id'     => $this->getClientId(),
+            'redirect_uri'  => $this->getRedirectUri(),
+            'client_secret' => $this->getClientSecret(),
+            'grant_type'    => $this->getGrantType()
+        ];
+        if (!is_null($this->getCode())) {
+            $params['code'] = $this->getCode();
+        } elseif (!is_null($this->refreshToken)) {
+            $params['refresh_token'] = $this->getCode();
+        }
+
+        $headers = [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ];
+        return new Request(
+            'POST',
+            $uri,
+            $headers,
+            build_query($params)
+        );
+    }
+
+    public function getGrantType() {
+        if (!is_null($this->grantType)) {
+            return $this->grantType;
+        }
+
+        if (!is_null($this->getCode())) {
+            return "authorization_code";
+        } elseif (!is_null($this->refreshToken)) {
+            return 'refresh_token';
+        }
+
+        return null;
+    }
+
+    public function setRefreshToken($token) {
+        $this->refreshToken = $token;
+    }
+
+    public function getRefreshToken() {
+        return $this->refreshToken;
     }
 
     public function buildFullAuthorizationUri(array $config = [])
@@ -112,6 +200,10 @@ class OAuth2
         $this->redirectUri = (string)$uri;
     }
 
+    public function getRedirectUri() {
+        return $this->redirectUri;
+    }
+
     public function setTokenCredentialUri($uri)
     {
         $this->tokenCredentialUri = $this->coerceUri($uri);
@@ -120,6 +212,16 @@ class OAuth2
     public function getTokenCredentialUri()
     {
         return $this->tokenCredentialUri;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
     }
 
     public function setClientId($clientId)

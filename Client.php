@@ -6,7 +6,7 @@ use Tsk\OneDrive\Services\OAuth2;
 
 class Client
 {
-    const API_BASE_PATH = 'https://graph.microsoft.com/v1.0';
+    const API_BASE_PATH = 'https://graph.microsoft.com/v1.0/';
     const AUTH_URL  = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
     const TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 
@@ -90,14 +90,16 @@ class Client
 
         return $auth->buildFullAuthorizationUri($params);
     }
+
     public function fetchAccessTokenWithAuthCode($code)
     {
         if (strlen($code) == 0) {
             throw new \InvalidArgumentException("Invalid code");
         }
-        
+        $auth = $this->getOAuth2Service();
+        $auth->setCode($code);
+        return $auth->fetchAuthToken($this->getHttpClient());
     }
-
 
     public function getOAuth2Service()
     {
@@ -108,9 +110,32 @@ class Client
         return $this->auth;
     }
 
-    /**
-     * create a default google auth object
-     */
+    public function setAccessToken($token)
+    {
+        if (is_string($token)) {
+            if ($json = json_decode($token, true)) {
+                $token = $json;
+            } else {
+                // token String
+                $token = array(
+                    'access_token' => $token,
+                );
+            }
+        }
+        if ($token == null) {
+            throw new \InvalidArgumentException('invalid json token');
+        }
+        if (!isset($token['access_token'])) {
+            throw new \InvalidArgumentException("Invalid token format");
+        }
+        $this->token = $token;
+    }
+
+    public function getAccessToken()
+    {
+        return $this->token;
+    }
+
     protected function createOAuth2Service()
     {
         $auth = new OAuth2(
@@ -158,7 +183,7 @@ class Client
 
     protected function createDefaultHttpClient()
     {
-        $options['base_uri'] = $this->config['base_path'];
-        return new \GuzzleHttp\Client($options['base_uri']);
+        $options['base_uri'] = $this->config['base_uri'];
+        return new \GuzzleHttp\Client($options);
     }
 }
