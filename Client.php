@@ -164,7 +164,7 @@ class Client
         //to do refresh token if expire
 
         $token = $this->getAccessToken();
-        $request->withHeader('Authorization', 'Bearer ' . $token['access_token']);
+        $request->withHeader('authorization', 'Bearer ' . $token['access_token']);
         return HttpBuilder::getResponse($http, $request, $expectedClass);
     }
 
