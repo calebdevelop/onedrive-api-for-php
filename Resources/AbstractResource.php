@@ -72,7 +72,9 @@ abstract class AbstractResource
         $request = new Request(
             $method['httpMethod'],
             $path,
-            ['content-type' => 'application/json'],
+            [
+                'content-type' => 'application/json'
+            ],
             $postBody ? json_encode($postBody) : ''
         );
 

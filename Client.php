@@ -55,7 +55,7 @@ class Client
     }
 
     /**
-     * @return \GuzzleHttp\ClientInterface implementation
+     * @return \GuzzleHttp\Client
      */
     public function getHttpClient()
     {
@@ -93,14 +93,34 @@ class Client
         return $auth->buildFullAuthorizationUri($params);
     }
 
-    public function fetchAccessTokenWithAuthCode($code)
+    public function fetchAccessTokenWithAuthCode($code = null)
     {
         if (strlen($code) == 0) {
             throw new \InvalidArgumentException("Invalid code");
         }
         $auth = $this->getOAuth2Service();
         $auth->setCode($code);
-        return $auth->fetchAuthToken($this->getHttpClient());
+        $creds = $auth->fetchAuthToken($this->getHttpClient());
+        if ($creds && isset($creds['access_token'])) {
+            $creds['created'] = time();
+            $this->setAccessToken($creds);
+        }
+        return $creds;
+    }
+
+    public function refreshToken($refreshToken = null) {
+        if(is_null($refreshToken) && !$this->token && !isset($this->token['refresh_token'])) {
+            throw new \InvalidArgumentException('$refresh parameters token is required');
+        }
+        $refreshToken = !is_null($refreshToken) ? $refreshToken : $this->token['refresh_token'];
+        $auth = $this->getOAuth2Service();
+        $auth->setRefreshToken($refreshToken);
+        $creds = $auth->fetchAuthToken($this->getHttpClient());
+        if ($creds && isset($creds['access_token'])) {
+            $creds['created'] = time();
+            $this->setAccessToken($creds);
+        }
+        return $creds;
     }
 
     public function getOAuth2Service()
@@ -161,11 +181,30 @@ class Client
     public function send($request, $expectedClass = null) {
         $http = $this->getHttpClient();
 
-        //to do refresh token if expire
+        //refresh token
+        if (isset($this->token['refresh_token']) && $this->isAccessTokenExpired()) {
+            $creds = $this->refreshToken();
+            if (!isset($creds['access_token'])) {
+                throw new \Exception(\GuzzleHttp\json_encode($creds));
+            }
+        }
 
         $token = $this->getAccessToken();
-        $request->withHeader('authorization', 'Bearer ' . $token['access_token']);
+        $request = $request->withHeader('authorization', 'Bearer '. $token['access_token']);
         return HttpBuilder::getResponse($http, $request, $expectedClass);
+    }
+
+    public function isAccessTokenExpired() {
+        if (!$this->token) {
+            return true;
+        }
+
+        $created = 0;
+        if (isset($this->token['created'])) {
+            $created = $this->token['created'];
+        }
+        // If the token is set to expire in the next 30 seconds.
+        return ($created + ($this->token['expires_in'] - 30)) < time();
     }
 
     public function setClientId($clientId) {
@@ -199,7 +238,8 @@ class Client
 
     protected function createDefaultHttpClient()
     {
-        $options['base_uri'] = $this->config['base_uri'];
-        return new \GuzzleHttp\Client($options);
+        return new \GuzzleHttp\Client([
+            'base_uri' => $this->config['base_uri']
+        ]);
     }
 }

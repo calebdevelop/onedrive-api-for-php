@@ -73,7 +73,7 @@ class OAuth2
      */
     private function parseTokenFromResponse($response) {
         $json = $response->getBody()->getContents();
-        return \GuzzleHttp\json_decode($json);
+        return \GuzzleHttp\json_decode($json, true);
     }
 
     /**
@@ -90,7 +90,7 @@ class OAuth2
         if (!is_null($this->getCode())) {
             $params['code'] = $this->getCode();
         } elseif (!is_null($this->refreshToken)) {
-            $params['refresh_token'] = $this->getCode();
+            $params['refresh_token'] = $this->refreshToken;
         }
 
         $headers = [
@@ -118,8 +118,8 @@ class OAuth2
         return null;
     }
 
-    public function setRefreshToken($token) {
-        $this->refreshToken = $token;
+    public function setRefreshToken($refreshToken) {
+        $this->refreshToken = $refreshToken;
     }
 
     public function getRefreshToken() {
