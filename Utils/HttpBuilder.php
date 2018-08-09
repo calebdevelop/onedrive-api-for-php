@@ -11,6 +11,10 @@ namespace Tsk\OneDrive\Utils;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\RequestInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class HttpBuilder
 {
@@ -25,12 +29,20 @@ class HttpBuilder
 
         $content = $response->getBody()->getContents();
 
-        if (is_null($expectedClass)) {
-            $result = \GuzzleHttp\json_decode($content);
-            return $result;
-        } else {
-            //to do
-            $tzData = \GuzzleHttp\json_decode($content);
+        $result = \GuzzleHttp\json_decode($content);
+        if (!is_null($expectedClass)) {
+
+            $normalizer = new ObjectNormalizer(
+                null,
+                null,
+                null,
+                new ReflectionExtractor()
+            );
+
+            $serializer = new Serializer([$normalizer]);
+
+            $result = $serializer->denormalize($result->value[0], $expectedClass);
         }
+        return $result;
     }
 }

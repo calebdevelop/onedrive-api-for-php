@@ -3,7 +3,7 @@ namespace Tsk\OneDrive\Services;
 
 
 use Tsk\OneDrive\Client;
-use Tsk\OneDrive\Resources\FileResource;
+use Tsk\OneDrive\Resources\ItemResource;
 
 class OneDriveService
 {
@@ -17,14 +17,14 @@ class OneDriveService
     /* @var $client Client */
     private $client;
 
-    /* @var $file FileResource */
-    public $file;
+    /* @var $item ItemResource */
+    public $item;
 
     public function __construct(Client $client)
     {
         $this->client = $client;
 
-        $this->file = new FileResource($this);
+        $this->item = new ItemResource($this);
     }
 
     public function getClient() {

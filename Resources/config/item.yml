@@ -1,0 +1,18 @@
+methods:
+    getThumbnail:
+        path: 'me/drive/items/{itemId}/thumbnails'
+        httpMethod: 'GET'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
+    createFolder:
+        path: 'me/drive/items/{parentItemId}/children'
+        httpMethod: 'POST'
+        parameters:
+            parentItemId:
+                location: 'path'
+                type: 'string'
+                required: true

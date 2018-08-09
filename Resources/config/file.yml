@@ -1,9 +1,0 @@
-methods:
-    getThumbnail:
-        path: 'me/drive/items/{itemId}/thumbnails'
-        httpMethod: 'GET'
-        parameters:
-            itemId:
-                location: 'path'
-                type: 'string'
-                required: true
