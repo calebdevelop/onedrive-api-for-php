@@ -178,7 +178,7 @@ class Client
      * @param $request Request
      * @param null $expectedClass
      */
-    public function send($request, $expectedClass = null) {
+    public function send($request, $expectedClass = null, $resultKey = []) {
         $http = $this->getHttpClient();
 
         //refresh token
@@ -189,7 +189,7 @@ class Client
             }
         }
         $request = $request->withHeader('authorization', 'Bearer '. $this->token['access_token']);
-        return HttpBuilder::getResponse($http, $request, $expectedClass);
+        return HttpBuilder::getResponse($http, $request, $expectedClass, $resultKey);
     }
 
     public function isAccessTokenExpired() {

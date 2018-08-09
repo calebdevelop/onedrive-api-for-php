@@ -1,13 +1,13 @@
 <?php
 namespace Tsk\OneDrive\Models;
 
-class Thumbnail extends AbstractModel
+class Thumbnail
 {
-    private $large;
+    protected $large;
 
-    private $medium;
+    protected $medium;
 
-    private $small;
+    protected $small;
 
     /**
      * @return Image

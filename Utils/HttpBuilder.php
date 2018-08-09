@@ -12,9 +12,10 @@ namespace Tsk\OneDrive\Utils;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use GuzzleHttp\json_decode;
 
 class HttpBuilder
 {
@@ -23,13 +24,13 @@ class HttpBuilder
      * @param $request RequestInterface
      * @param $expectedClass
      */
-    public static function getResponse($http, $request, $expectedClass = null)
+    public static function getResponse($http, $request, $expectedClass = null, $resultKey = [])
     {
         $response = $http->send($request);
 
         $content = $response->getBody()->getContents();
 
-        $result = \GuzzleHttp\json_decode($content);
+        $result = json_decode($content, true);
         if (!is_null($expectedClass)) {
 
             $normalizer = new ObjectNormalizer(
@@ -39,9 +40,22 @@ class HttpBuilder
                 new ReflectionExtractor()
             );
 
-            $serializer = new Serializer([$normalizer]);
+            $serializer = new Serializer([$normalizer, new DateTimeNormalizer()]);
 
-            $result = $serializer->denormalize($result->value[0], $expectedClass);
+            $tzData = $result;
+            if (!empty($resultKey)) {
+                $tmp = $tzData;
+                foreach ($resultKey as $key) {
+                    if (isset($tmp[$key])) {
+                        $tmp = $tmp[$key];
+                        continue;
+                    }
+                    throw new \Exception('Invalid result key : '. json_encode($resultKey));
+                }
+                $tzData = $tmp;
+            }
+
+            $result = $serializer->denormalize($tzData, $expectedClass);
         }
         return $result;
     }

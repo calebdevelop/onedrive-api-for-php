@@ -17,14 +17,14 @@ class OneDriveService
     /* @var $client Client */
     private $client;
 
-    /* @var $item ItemResource */
-    public $item;
+    /* @var $items ItemResource */
+    public $items;
 
     public function __construct(Client $client)
     {
         $this->client = $client;
 
-        $this->item = new ItemResource($this);
+        $this->items = new ItemResource($this);
     }
 
     public function getClient() {
