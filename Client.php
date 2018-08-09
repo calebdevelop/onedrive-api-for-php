@@ -188,9 +188,7 @@ class Client
                 throw new \Exception(\GuzzleHttp\json_encode($creds));
             }
         }
-
-        $token = $this->getAccessToken();
-        $request = $request->withHeader('authorization', 'Bearer '. $token['access_token']);
+        $request = $request->withHeader('authorization', 'Bearer '. $this->token['access_token']);
         return HttpBuilder::getResponse($http, $request, $expectedClass);
     }
 
