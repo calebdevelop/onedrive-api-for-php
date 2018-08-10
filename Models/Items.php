@@ -18,6 +18,23 @@ class Items
     public $lastModifiedBy;
     public $parentReference;
     protected $folder;
+    public $image;
+
+    /**
+     * @return Image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage(Image $image)
+    {
+        $this->image = $image;
+    }
 
     /**
      * @return mixed

@@ -8,11 +8,24 @@ methods:
                 type: 'string'
                 required: true
 
+    createFolderOnRoot:
+        path: 'me/drive/root/children'
+        httpMethod: 'POST'
+
     createFolder:
         path: 'me/drive/items/{parentItemId}/children'
         httpMethod: 'POST'
         parameters:
             parentItemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
+    get:
+        path: 'me/drive/items/{itemId}'
+        httpMethod: 'GET'
+        parameters:
+            itemId:
                 location: 'path'
                 type: 'string'
                 required: true

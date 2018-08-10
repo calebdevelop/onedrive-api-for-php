@@ -7,9 +7,21 @@ use Tsk\OneDrive\Models\Thumbnail;
 
 class ItemResource extends AbstractResource
 {
+    /**
+     * @param string $itemId
+     * @return Thumbnail
+     */
     public function getThumbnail($itemId)
     {
         return $this->request('getThumbnail', ['itemId' => $itemId], Thumbnail::class, ['value', 0]);
+    }
+
+    /**
+     * @param $itemId
+     * @return Items
+     */
+    public function get($itemId) {
+        return $this->request('get', ['itemId' => $itemId], Items::class);
     }
 
     public function createFolder($name, $folderId = null, $conflictBehaviorRename = true) {
@@ -20,12 +32,18 @@ class ItemResource extends AbstractResource
         if ($conflictBehaviorRename) {
             $postBody['@microsoft.graph.conflictBehavior'] = "rename";
         }
+        if (!is_null($folderId)) {
+            return $this->createFolderOnRoot($postBody, $conflictBehaviorRename);
+        }
         $params = [
             'parentItemId' => !is_null($folderId) ? $folderId : 'root',
             'postBody'     => $postBody
         ];
         return $this->request('createFolder', $params, Items::class);
+    }
 
+    private function createFolderOnRoot($postBody) {
+        return $this->request('createFolderOnRoot', ['postBody' => $postBody], Items::class);
     }
 
     protected function getConfigMethods()
