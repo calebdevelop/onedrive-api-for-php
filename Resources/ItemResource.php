@@ -32,7 +32,7 @@ class ItemResource extends AbstractResource
         if ($conflictBehaviorRename) {
             $postBody['@microsoft.graph.conflictBehavior'] = "rename";
         }
-        if (!is_null($folderId)) {
+        if (is_null($folderId)) {
             return $this->createFolderOnRoot($postBody, $conflictBehaviorRename);
         }
         $params = [
@@ -40,6 +40,30 @@ class ItemResource extends AbstractResource
             'postBody'     => $postBody
         ];
         return $this->request('createFolder', $params, Items::class);
+    }
+
+    /**
+     * @param $path
+     * @return Items
+     */
+    public function getItemByPath($path) {
+        return $this->request('getItemByPath', ['itemPath' => $path], Items::class);
+    }
+
+
+    public function createUploadSessionByFolder($fileName, $folderId, $conflictBehavior = "rename", $description = null)
+    {
+        $params = [
+            'folderId' => $folderId,
+            'fileName' => $fileName,
+            'postBody' => [
+                "item" => [
+                    "@microsoft.graph.conflictBehavior" => $conflictBehavior, //possible value => "rename | fail | overwrite",
+                    "description"    => ($description) ? $description : ''
+                ]
+            ]
+        ];
+        return $this->request('createUploadSessionByFolder', $params);
     }
 
     private function createFolderOnRoot($postBody) {

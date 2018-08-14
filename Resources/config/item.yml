@@ -29,3 +29,25 @@ methods:
                 location: 'path'
                 type: 'string'
                 required: true
+
+    getItemByPath:
+        path: 'me/drive/root:/{itemPath}'
+        httpMethod: 'GET'
+        parameters:
+            itemPath:
+                location: 'path'
+                type: 'string'
+                required: true
+
+    createUploadSessionByFolder:
+        path: 'me/drive/items/{folderId}:/{fileName}:/createUploadSession'
+        httpMethod: 'POST'
+        parameters:
+            folderId:
+                location: 'path'
+                type: 'string'
+                required: true
+            fileName:
+                location: 'path'
+                type: 'string'
+                required: true

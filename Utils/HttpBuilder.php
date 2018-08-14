@@ -33,15 +33,6 @@ class HttpBuilder
         $result = json_decode($content, true);
         if (!is_null($expectedClass)) {
 
-            $normalizer = new ObjectNormalizer(
-                null,
-                null,
-                null,
-                new ReflectionExtractor()
-            );
-
-            $serializer = new Serializer([$normalizer, new DateTimeNormalizer()]);
-
             $tzData = $result;
             if (!empty($resultKey)) {
                 $tmp = $tzData;
@@ -50,10 +41,18 @@ class HttpBuilder
                         $tmp = $tmp[$key];
                         continue;
                     }
-                    throw new \Exception('Invalid result key : '. json_encode($resultKey));
+                    //throw new \Exception('Invalid result key : '. json_encode($resultKey));
                 }
                 $tzData = $tmp;
             }
+
+            $normalizer = new ObjectNormalizer(
+                null,
+                null,
+                null,
+                new ReflectionExtractor()
+            );
+            $serializer = new Serializer([$normalizer, new DateTimeNormalizer()]);
 
             $result = $serializer->denormalize($tzData, $expectedClass);
         }
