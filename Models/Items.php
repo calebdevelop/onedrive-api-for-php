@@ -14,11 +14,32 @@ class Items
     protected $cTag;
     protected $eTag;
     public $webUrl;
+    public $downloadUrl;
     public $createdBy;
     public $lastModifiedBy;
     public $parentReference;
     protected $folder;
     public $image;
+    /* @var $video Video */
+    public $video;
+    /* @var $video File */
+    public $file;
+
+    /**
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    public function setFile(File $file)
+    {
+        $this->file = $file;
+    }
 
     /**
      * @return Image
@@ -37,6 +58,22 @@ class Items
     }
 
     /**
+     * @return Video
+     */
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * @param Video $video
+     */
+    public function setVideo(Video $video)
+    {
+        $this->video = $video;
+    }
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -50,6 +87,22 @@ class Items
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDownloadUrl()
+    {
+        return $this->downloadUrl;
+    }
+
+    /**
+     * @param mixed $downloadUrl
+     */
+    public function setDownloadUrl($downloadUrl)
+    {
+        $this->downloadUrl = $downloadUrl;
     }
 
     /**

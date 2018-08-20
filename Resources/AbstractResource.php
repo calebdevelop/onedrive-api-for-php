@@ -20,7 +20,7 @@ abstract class AbstractResource
         $this->methods = $this->getConfigMethods();
     }
 
-    protected function request($methodName, $arguments, $expectedClass = null, $resultKey = []) {
+    protected function request($methodName, $arguments, $expectedClass = null) {
         if (!isset($this->methods[$methodName])) {
 
             $class = get_class($this);
@@ -77,6 +77,11 @@ abstract class AbstractResource
             ],
             $postBody ? json_encode($postBody) : ''
         );
+
+        $resultKey = null;
+        if ($method['resultKey']) {
+            $resultKey = $method['resultKey'];
+        }
 
         return $this->client->send($request, $expectedClass, $resultKey);
     }

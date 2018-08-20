@@ -2,6 +2,9 @@ methods:
     getThumbnail:
         path: 'me/drive/items/{itemId}/thumbnails'
         httpMethod: 'GET'
+        resultKey:
+            - value
+            - 0
         parameters:
             itemId:
                 location: 'path'
@@ -48,6 +51,16 @@ methods:
                 type: 'string'
                 required: true
             fileName:
+                location: 'path'
+                type: 'string'
+                required: true
+
+    getDownloadUrl:
+        path: 'me/drive/items/{itemId}/content'
+        httpMethod: 'GET'
+        httpAllowRedirect: true
+        parameters:
+            itemId:
                 location: 'path'
                 type: 'string'
                 required: true

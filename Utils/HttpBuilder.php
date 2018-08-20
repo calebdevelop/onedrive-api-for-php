@@ -28,6 +28,11 @@ class HttpBuilder
     {
         $response = $http->send($request);
 
+        if ($response->getStatusCode() > 300) {
+            $header = $response->getHeaders();
+            return isset($header['Location'][0]) ? $header['Location'][0]: $header;
+        }
+
         $content = $response->getBody()->getContents();
 
         $result = json_decode($content, true);
@@ -48,7 +53,7 @@ class HttpBuilder
 
             $normalizer = new ObjectNormalizer(
                 null,
-                null,
+                new CustomNameConverter(),
                 null,
                 new ReflectionExtractor()
             );

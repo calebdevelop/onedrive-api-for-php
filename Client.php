@@ -237,7 +237,8 @@ class Client
     protected function createDefaultHttpClient()
     {
         return new \GuzzleHttp\Client([
-            'base_uri' => $this->config['base_uri']
+            'base_uri' => $this->config['base_uri'],
+            'allow_redirects' => false
         ]);
     }
 }

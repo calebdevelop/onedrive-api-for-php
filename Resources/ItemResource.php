@@ -13,7 +13,7 @@ class ItemResource extends AbstractResource
      */
     public function getThumbnail($itemId)
     {
-        return $this->request('getThumbnail', ['itemId' => $itemId], Thumbnail::class, ['value', 0]);
+        return $this->request('getThumbnail', ['itemId' => $itemId], Thumbnail::class);
     }
 
     /**
@@ -64,6 +64,10 @@ class ItemResource extends AbstractResource
             ]
         ];
         return $this->request('createUploadSessionByFolder', $params);
+    }
+
+    public function getDownloadUrl($itemId) {
+        return $this->request('getDownloadUrl', ['itemId' => $itemId]);
     }
 
     private function createFolderOnRoot($postBody) {
