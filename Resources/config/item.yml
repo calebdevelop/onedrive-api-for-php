@@ -64,3 +64,12 @@ methods:
                 location: 'path'
                 type: 'string'
                 required: true
+
+    shareLink:
+        path: 'me/drive/items/{itemId}/createLink'
+        httpMethod: 'POST'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true

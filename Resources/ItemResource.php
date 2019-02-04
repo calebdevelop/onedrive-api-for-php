@@ -3,6 +3,7 @@ namespace Tsk\OneDrive\Resources;
 
 use Symfony\Component\Yaml\Yaml;
 use Tsk\OneDrive\Models\Items;
+use Tsk\OneDrive\Models\Share;
 use Tsk\OneDrive\Models\Thumbnail;
 
 class ItemResource extends AbstractResource
@@ -68,6 +69,23 @@ class ItemResource extends AbstractResource
 
     public function getDownloadUrl($itemId) {
         return $this->request('getDownloadUrl', ['itemId' => $itemId]);
+    }
+
+    /**
+     * @param $fileId
+     * @param $type string view|edit|embed
+     * @param $scope string anonymous|organization
+     */
+    public function shareLink($fileId, $type, $scope) {
+        $params = [
+            'itemId'   => $fileId,
+            'postBody' => [
+                'type'  => $type,
+                'scope' => $scope
+            ]
+        ];
+
+        return $this->request('shareLink', $params, Share::class);
     }
 
     private function createFolderOnRoot($postBody) {
