@@ -20,7 +20,7 @@ abstract class AbstractResource
         $this->methods = $this->getConfigMethods();
     }
 
-    protected function request($methodName, $arguments, $expectedClass = null) {
+    protected function request($methodName, $arguments, $expectedClass = null, $absoluteUrl = null) {
         if (!isset($this->methods[$methodName])) {
 
             $class = get_class($this);

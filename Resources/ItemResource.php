@@ -5,6 +5,7 @@ use Symfony\Component\Yaml\Yaml;
 use Tsk\OneDrive\Models\Items;
 use Tsk\OneDrive\Models\Share;
 use Tsk\OneDrive\Models\Thumbnail;
+use Tsk\OneDrive\Models\UloadSession;
 
 class ItemResource extends AbstractResource
 {
@@ -51,8 +52,15 @@ class ItemResource extends AbstractResource
         return $this->request('getItemByPath', ['itemPath' => $path], Items::class);
     }
 
-
-    public function createUploadSessionByFolder($fileName, $folderId, $conflictBehavior = "rename", $description = null)
+    /**
+     * @param $fileName
+     * @param $folderId
+     * @param string $conflictBehavior (rename | fail | replace)
+     * @param null $description
+     * @return UloadSession
+     * @throws \Exception
+     */
+    public function createUploadSession($fileName, $folderId, $conflictBehavior = "rename", $description = null)
     {
         $params = [
             'folderId' => $folderId,
@@ -64,7 +72,28 @@ class ItemResource extends AbstractResource
                 ]
             ]
         ];
-        return $this->request('createUploadSessionByFolder', $params);
+        return $this->request('createUploadSession', $params, UloadSession::class);
+    }
+
+    /**
+     * @param $uploadSession UloadSession
+     * @param $byte
+     * @param $start
+     * @param $end
+     * @param $fileSize
+     * @return mixed
+     * @throws \Exception
+     */
+    public function uploadBytesToTheUploadSession($uploadSession, $byte, $start, $end, $fileSize)
+    {
+        $params = [
+            'postBody' => $byte,
+            'header'   => [
+                'Content-Length' => ($end - $start) + 1,
+                'Content-Range'  => "bytes $start-$end/$fileSize"
+            ]
+        ];
+        return $this->request('uploadBytesToTheUploadSession', $params, null, $uploadSession->getUploadUrl());
     }
 
     public function getDownloadUrl($itemId) {
