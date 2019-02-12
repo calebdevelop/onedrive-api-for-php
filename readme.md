@@ -24,4 +24,15 @@ $authUrl = $client->createAuthUrl();
 echo $authUrl;
 ```
 
-Go to the Url indicate by $authUrl. After login, you are redirecting to 'http://localhost?code=xxxxxxx' with the get parameter 'code'
+Go to the browser and enter the url generate. 
+After Authentification, you are redirecting to 'http://localhost?code=xxxxxxx'
+
+##### Redeem the code for access tokens :
+When you have received the ``code`` value, you can get the acces token using ``$client->fetchAccessTokenWithAuthCode($_GET['code'])``.
+Make sure to copy this code in your redirect url.
+
+```
+$token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+file_put_contents(__DIR__.'/token.json', \json_encode($token));
+```
+
