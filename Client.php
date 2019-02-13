@@ -181,6 +181,17 @@ class Client
     public function send($request, $expectedClass = null, $resultKey = []) {
         $http = $this->getHttpClient();
 
+        /*
+        if ($request->getUri()) {
+
+        }
+
+        echo $request->getUri()->;
+        exit;
+        */
+
+        $http = new \GuzzleHttp\Client();
+
         //refresh token
         if (isset($this->token['refresh_token']) && $this->isAccessTokenExpired()) {
             $creds = $this->refreshToken();

@@ -88,12 +88,12 @@ class ItemResource extends AbstractResource
     {
         $params = [
             'postBody' => $byte,
-            'header'   => [
+            'headers'   => [
                 'Content-Length' => ($end - $start) + 1,
                 'Content-Range'  => "bytes $start-$end/$fileSize"
             ]
         ];
-        return $this->request('uploadBytesToTheUploadSession', $params, null, $uploadSession->getUploadUrl());
+        return $this->request('uploadBytesToTheUploadSession', $params, null, $uploadSession->getUploadUrl(), false);
     }
 
     public function getDownloadUrl($itemId) {
