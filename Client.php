@@ -181,17 +181,6 @@ class Client
     public function send($request, $expectedClass = null, $resultKey = []) {
         $http = $this->getHttpClient();
 
-        /*
-        if ($request->getUri()) {
-
-        }
-
-        echo $request->getUri()->;
-        exit;
-        */
-
-        $http = new \GuzzleHttp\Client();
-
         //refresh token
         if (isset($this->token['refresh_token']) && $this->isAccessTokenExpired()) {
             $creds = $this->refreshToken();
@@ -247,9 +236,15 @@ class Client
 
     protected function createDefaultHttpClient()
     {
-        return new \GuzzleHttp\Client([
+        $options = [
             'base_uri' => $this->config['base_uri'],
-            'allow_redirects' => false
-        ]);
+            'allow_redirects' => false,
+            //'curl' => ['CURLOPT_SSL_VERIFYPEER' => false]
+        ];
+
+        $client = new \GuzzleHttp\Client($options);
+
+
+        return  $client;
     }
 }
