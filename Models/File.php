@@ -12,6 +12,7 @@ namespace Tsk\OneDrive\Models;
 class File
 {
     private $mimeType;
+
     private $processingMetadata;
 
     /**
