@@ -3,6 +3,7 @@ namespace Tsk\OneDrive\Resources;
 
 use GuzzleHttp\Psr7\Request;
 use Tsk\OneDrive\Services\OneDriveService;
+use Tsk\OneDrive\Client;
 
 abstract class AbstractResource
 {
@@ -11,11 +12,15 @@ abstract class AbstractResource
     protected $methods;
     /**
      * AbstractResource constructor.
-     * @param $service OneDriveService
+     * @param $service OneDriveService|Client
      */
     public function __construct($service)
     {
-        $this->client = $service->getClient();
+        if ($service instanceof OneDriveService) {
+            $this->client = $service->getClient();
+        } elseif ($service instanceof Client) {
+            $this->client = $service;
+        }
 
         $this->methods = $this->getConfigMethods();
     }
