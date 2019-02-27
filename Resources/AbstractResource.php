@@ -25,7 +25,7 @@ abstract class AbstractResource
         $this->methods = $this->getConfigMethods();
     }
 
-    protected function request($methodName, $arguments, $expectedClass = null) {
+    protected function request($methodName, $arguments, $expectedClass = null, $absoluteUrl = null, $isJsonContentType = true) {
         if (!isset($this->methods[$methodName])) {
 
             $class = get_class($this);
@@ -42,8 +42,18 @@ abstract class AbstractResource
 
         $postBody = null;
         if (isset($parameters['postBody'])) {
-            $postBody = (array) $parameters['postBody'];
+            $postBody = ($isJsonContentType) ? json_encode($parameters['postBody']) : $parameters['postBody'];
             unset($parameters['postBody']);
+        }
+
+        $headers = [];
+        if (isset($parameters['headers'])) {
+            $headers = $parameters['headers'];
+            unset($parameters['headers']);
+        }
+
+        if ($isJsonContentType) {
+            $headers['content-type'] = 'application/json';
         }
 
         foreach ($parameters as $key => $val) {
@@ -69,18 +79,21 @@ abstract class AbstractResource
             }
         }
 
-        $path = $this->createRequestPath(
-            $method['path'],
-            $parameters
-        );
+        $path = null;
+        if (isset($method['path'])) {
+            $path = $this->createRequestPath(
+                $method['path'],
+                $parameters
+            );
+        } elseif (!is_null($absoluteUrl)) {
+            $path = $absoluteUrl;
+        }
 
         $request = new Request(
             $method['httpMethod'],
             $path,
-            [
-                'content-type' => 'application/json'
-            ],
-            $postBody ? json_encode($postBody) : ''
+            $headers,
+            $postBody ? $postBody : ''
         );
 
         $resultKey = null;

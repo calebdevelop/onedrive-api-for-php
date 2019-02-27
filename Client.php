@@ -236,9 +236,15 @@ class Client
 
     protected function createDefaultHttpClient()
     {
-        return new \GuzzleHttp\Client([
+        $options = [
             'base_uri' => $this->config['base_uri'],
-            'allow_redirects' => false
-        ]);
+            'allow_redirects' => false,
+            //'curl' => ['CURLOPT_SSL_VERIFYPEER' => false]
+        ];
+
+        $client = new \GuzzleHttp\Client($options);
+
+
+        return  $client;
     }
 }

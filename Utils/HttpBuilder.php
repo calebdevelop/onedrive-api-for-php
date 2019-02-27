@@ -26,7 +26,7 @@ class HttpBuilder
      */
     public static function getResponse($http, $request, $expectedClass = null, $resultKey = [])
     {
-        $response = $http->send($request);
+        $response = $http->send($request, ['verify' => false]);
 
         if ($response->getStatusCode() > 300) {
             $header = $response->getHeaders();

@@ -42,7 +42,7 @@ methods:
                 type: 'string'
                 required: true
 
-    createUploadSessionByFolder:
+    createUploadSession:
         path: 'me/drive/items/{folderId}:/{fileName}:/createUploadSession'
         httpMethod: 'POST'
         parameters:
@@ -54,6 +54,9 @@ methods:
                 location: 'path'
                 type: 'string'
                 required: true
+
+    uploadBytesToTheUploadSession:
+        httpMethod: 'PUT'
 
     getDownloadUrl:
         path: 'me/drive/items/{itemId}/content'
