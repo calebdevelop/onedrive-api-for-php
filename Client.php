@@ -110,7 +110,7 @@ class Client
 
     public function refreshToken($refreshToken = null) {
         if(is_null($refreshToken) && !$this->token && !isset($this->token['refresh_token'])) {
-            throw new \InvalidArgumentException('$refresh parameters token is required');
+            throw new \InvalidArgumentException('$refreshToken parameters token is required');
         }
         $refreshToken = !is_null($refreshToken) ? $refreshToken : $this->token['refresh_token'];
         $auth = $this->getOAuth2Service();

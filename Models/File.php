@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: esokia
- * Date: 17/08/18
- * Time: 10:28
- */
 
 namespace Tsk\OneDrive\Models;
 

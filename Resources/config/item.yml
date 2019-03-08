@@ -58,6 +58,15 @@ methods:
     uploadBytesToTheUploadSession:
         httpMethod: 'PUT'
 
+    replaceExistingFile:
+        path: 'me/drive/items/{itemId}/content'
+        httpMethod: 'PUT'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
     getDownloadUrl:
         path: 'me/drive/items/{itemId}/content'
         httpMethod: 'GET'
