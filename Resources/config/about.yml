@@ -1,0 +1,4 @@
+methods:
+  get:
+    path: 'me/drive'
+    httpMethod: 'GET'
