@@ -14,6 +14,7 @@ use function GuzzleHttp\Psr7\parse_query;
 use GuzzleHttp\Psr7\Request;
 use function GuzzleHttp\Psr7\uri_for;
 use Psr\Http\Message\ResponseInterface;
+use Tsk\OneDrive\Client;
 
 class OAuth2
 {
@@ -87,6 +88,12 @@ class OAuth2
             'client_secret' => $this->getClientSecret(),
             'grant_type'    => $this->getGrantType()
         ];
+
+        //For native App
+        if (trim($params['redirect_uri']) == Client::NATIVE_APP_REDIRECT_URI OR $params['redirect_uri'] == Client::DESKTOP_OR_MOBILE_APP_REDIRECT_URI) {
+            unset($params['client_secret']);
+        }
+
         if (!is_null($this->getCode())) {
             $params['code'] = $this->getCode();
         } elseif (!is_null($this->refreshToken)) {
