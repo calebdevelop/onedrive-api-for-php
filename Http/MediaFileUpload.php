@@ -20,7 +20,15 @@ class MediaFileUpload
 
     private $fileName;
 
+    private $fileSize;
+
     private $folderId;
+
+    private $uploadSession;
+
+    private $item;
+
+    private $start = 0;
 
     public function __construct(
         Client $client,
@@ -35,44 +43,37 @@ class MediaFileUpload
         $this->chunkSize = $chunkSize;
         $this->fileName = $fileName;
         $this->folderId = $folderId;
+        $this->item = new ItemResource($this->client);
+    }
+
+    public function setFileSize($fileSize)
+    {
+        $this->fileSize = $fileSize;
     }
 
     public function nextChunk($chunk)
     {
-        $resumeUri = $this->getResumeUri();
-        /*
-        $headers = array(
-            'content-range' => "bytes $this->progress-$lastBytePos/$this->size",
-            'content-length' => strlen($chunk),
-            'expect' => '',
-        );
-        $request = new Request(
-            'PUT',
-            $resumeUri,
-            $headers,
-            Psr7\stream_for($chunk)
-        );
-        */
+        $end = $this->chunkSize + $this->start + 1;
+        if ($end > ($this->fileSize - 1)) {
+            $end = ($this->fileSize - 1);
+        }
+        $reponse = $this->item->uploadBytesToTheUploadSession($this->getUploadSession(), $chunk, $this->start, $end, $this->fileSize);
+        $this->start = $end + 1;
+
+        return $reponse;
     }
 
-    public function getResumeUri()
+    public function getUploadSession()
     {
         if (null === $this->resumeUri) {
-            $this->resumeUri = $this->fetchResumeUri();
+            $this->uploadSession = $this->fetchUploadSession();
         }
-        return $this->resumeUri;
+        return $this->uploadSession;
     }
 
-    private function fetchResumeUri()
+    private function fetchUploadSession()
     {
-        $request = new Request(
-            'PUT',
-            $resumeUri,
-            $headers,
-            Psr7\stream_for($chunk)
-        );
-        $item = new ItemResource($this->client);
-        $uploadSession = $item->createUploadSessionByFolder($this->fileName, $this->folderId);
-        return $uploadSession->
+        $uploadSession = $this->item->createUploadSession($this->fileName, $this->folderId);
+        return $uploadSession;
     }
 }
