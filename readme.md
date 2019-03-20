@@ -27,12 +27,11 @@ $authUrl = $client->createAuthUrl();
 echo $authUrl;
 ```
 
-Go to the browser and enter the url generate. 
-After Authentification, you are redirecting to 'http://localhost?code=xxxxxxx'
+Go to the browser and enter the generated url. <br>
+After authentication, you will be redirected to `http://localhost?code=xxxxxxx`
 
 ##### Redeem the code for access tokens :
-When you have received the ``code`` value, you can get the acces token using ``$client->fetchAccessTokenWithAuthCode($_GET['code'])``.
-Make sure to copy this code in your redirect url.
+After getting the ``code`` value, you can recover your access token with ``$client->fetchAccessTokenWithAuthCode($_GET['code'])``.
 
 ```
 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
@@ -41,6 +40,9 @@ file_put_contents(__DIR__.'/token.json', \json_encode($token));
 
 ##### Upload large files
 ```
+$token = file_get_contents(__DIR__.'/token.json');
+$client->setAccessToken($token);
+
 $file = '/path/to/the/file.docx';
 
 $handle   = fopen($file, 'rb');
