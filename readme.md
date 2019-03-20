@@ -1,12 +1,12 @@
 ##### Official Documentation
 https://docs.microsoft.com/en-us/onedrive/developer/rest-api/
-##### Instalation with composer
+##### Installation 
 ```$ composer require tarask/onedrive```
 ### Generate token
 
 ##### Get an Authorization code :
 ```
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use Tsk\OneDrive\Services\OneDriveService;
 use Tsk\OneDrive\Client;
