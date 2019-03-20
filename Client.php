@@ -12,6 +12,9 @@ class Client
     const AUTH_URL  = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
     const TOKEN_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 
+    const DESKTOP_OR_MOBILE_APP_REDIRECT_URI = 'https://login.live.com/oauth20_desktop.srf';
+    const NATIVE_APP_REDIRECT_URI = 'https://login.microsoftonline.com/common/oauth2/nativeclient';
+
     /**
      * @var \GuzzleHttp\ClientInterface $http
      */
@@ -110,7 +113,7 @@ class Client
 
     public function refreshToken($refreshToken = null) {
         if(is_null($refreshToken) && !$this->token && !isset($this->token['refresh_token'])) {
-            throw new \InvalidArgumentException('$refresh parameters token is required');
+            throw new \InvalidArgumentException('$refreshToken parameters token is required');
         }
         $refreshToken = !is_null($refreshToken) ? $refreshToken : $this->token['refresh_token'];
         $auth = $this->getOAuth2Service();

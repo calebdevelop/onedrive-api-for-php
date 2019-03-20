@@ -2,10 +2,12 @@
 namespace Tsk\OneDrive\Resources;
 
 use Symfony\Component\Yaml\Yaml;
+use Tsk\OneDrive\Models\File;
 use Tsk\OneDrive\Models\Items;
 use Tsk\OneDrive\Models\Share;
 use Tsk\OneDrive\Models\Thumbnail;
 use Tsk\OneDrive\Models\UloadSession;
+use GuzzleHttp\Psr7;
 
 class ItemResource extends AbstractResource
 {
@@ -76,6 +78,21 @@ class ItemResource extends AbstractResource
     }
 
     /**
+     * @param $itemId
+     * @param $content
+     * @return Items
+     * @throws \Exception
+     */
+    public function replaceExistingFile($itemId, $content)
+    {
+        $params = [
+            'itemId' => $itemId,
+            'postBody' => Psr7\stream_for($content)
+        ];
+        return $this->request('replaceExistingFile', $params, Items::class, null, false);
+    }
+
+    /**
      * @param $uploadSession UloadSession
      * @param $byte
      * @param $start
@@ -89,7 +106,7 @@ class ItemResource extends AbstractResource
         $params = [
             'postBody' => $byte,
             'headers'   => [
-                'Content-Length' => ($end - $start) + 1,
+                'Content-Length' => ($end - 1) - $start,
                 'Content-Range'  => "bytes $start-$end/$fileSize"
             ]
         ];

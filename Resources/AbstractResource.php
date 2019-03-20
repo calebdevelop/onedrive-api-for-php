@@ -25,7 +25,7 @@ abstract class AbstractResource
         $this->methods = $this->getConfigMethods();
     }
 
-    protected function request($methodName, $arguments, $expectedClass = null, $absoluteUrl = null, $isJsonContentType = true) {
+    protected function request($methodName, $arguments, $expectedClass = null, $customPath = null, $isJsonContentType = true) {
         if (!isset($this->methods[$methodName])) {
 
             $class = get_class($this);
@@ -80,13 +80,13 @@ abstract class AbstractResource
         }
 
         $path = null;
-        if (isset($method['path'])) {
+        if (is_null($customPath) && isset($method['path'])) {
             $path = $this->createRequestPath(
                 $method['path'],
                 $parameters
             );
-        } elseif (!is_null($absoluteUrl)) {
-            $path = $absoluteUrl;
+        } elseif (!is_null($customPath)) {
+            $path = $customPath;
         }
 
         $request = new Request(

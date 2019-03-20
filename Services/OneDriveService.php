@@ -3,7 +3,9 @@ namespace Tsk\OneDrive\Services;
 
 
 use Tsk\OneDrive\Client;
+use Tsk\OneDrive\Resources\AboutResource;
 use Tsk\OneDrive\Resources\ItemResource;
+use App\OneDriveApi\GraphClient;
 
 class OneDriveService
 {
@@ -14,19 +16,26 @@ class OneDriveService
     const ONEDRIVE_FILE_READ_WRITE = 'files.readwrite';
     const ONEDRIVE_FILE_READ_WRITE_ALL = 'files.readwrite.all';
 
-    /* @var $client Client */
+    /* @var $client GraphClient */
     private $client;
 
     /* @var $items ItemResource */
     public $items;
+
+    /** @var AboutResource */
+    public $about;
 
     public function __construct(Client $client)
     {
         $this->client = $client;
 
         $this->items = new ItemResource($this);
+        $this->about = new AboutResource($this);
     }
 
+    /**
+     * @return GraphClient
+     */
     public function getClient() {
         return $this->client;
     }
