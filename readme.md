@@ -1,10 +1,10 @@
-### Generate token
 ##### Official Documentation
 https://docs.microsoft.com/en-us/onedrive/developer/rest-api/
-##### Instalation
+##### Instalation with composer
 ```$ composer require tarask/onedrive```
-##### Get an Authorization code :
+### Generate token
 
+##### Get an Authorization code :
 ```
 require __DIR__.'/../vendor/autoload.php';
 
