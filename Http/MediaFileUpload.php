@@ -35,12 +35,12 @@ class MediaFileUpload
         $fileName,
         $folderId,
         $resumable = false,
-        $chunkSize = false
+        $chunkSize = null
     )
     {
         $this->client = $client;
         $this->resumable = $resumable;
-        $this->chunkSize = $chunkSize;
+        $this->chunkSize = $chunkSize - 1;
         $this->fileName = $fileName;
         $this->folderId = $folderId;
         $this->item = new ItemResource($this->client);
@@ -53,11 +53,13 @@ class MediaFileUpload
 
     public function nextChunk($chunk)
     {
-        $end = $this->chunkSize + $this->start + 1;
-        if ($end > ($this->fileSize - 1)) {
-            $end = ($this->fileSize - 1);
+        $end = $this->chunkSize + $this->start;
+        $fileNbByte = $this->fileSize - 1;
+        if ($end > $fileNbByte) {
+            $end = $fileNbByte;
         }
-        $reponse = $this->item->uploadBytesToTheUploadSession($this->getUploadSession(), $chunk, $this->start, $end, $this->fileSize);
+        $stream = \GuzzleHttp\Psr7\stream_for($chunk);
+        $reponse = $this->item->uploadBytesToTheUploadSession($this->getUploadSession(), $stream, $this->start, $end, $this->fileSize);
         $this->start = $end + 1;
 
         return $reponse;

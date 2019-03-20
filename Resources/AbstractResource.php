@@ -97,7 +97,7 @@ abstract class AbstractResource
         );
 
         $resultKey = null;
-        if ($method['resultKey']) {
+        if (isset($method['resultKey'])) {
             $resultKey = $method['resultKey'];
         }
 

@@ -36,3 +36,23 @@ $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 file_put_contents(__DIR__.'/token.json', \json_encode($token));
 ```
 
+##### Upload large files
+```
+$file = '/path/to/the/file.docx';
+
+$handle   = fopen($file, 'rb');
+$fileSize = filesize($file);
+$chunkSize = 1024*1024;
+
+$media = new MediaFileUpload($client, 'filename.docx', 'folderId', true, $chunkSize);
+$media->setFileSize($fileSize);
+
+$res = null;
+while (!feof($handle)) {
+    $bytes = fread($handle, $chunkSize);
+    $res = $media->nextChunk($bytes);
+}
+
+echo 'FileId : ' . $res['id'];
+print_r($res)
+```
