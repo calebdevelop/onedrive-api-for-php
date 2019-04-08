@@ -67,6 +67,15 @@ methods:
                 type: 'string'
                 required: true
 
+    move:
+        path: 'me/drive/items/{itemId}'
+        httpMethod: 'PATCH'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
     getDownloadUrl:
         path: 'me/drive/items/{itemId}/content'
         httpMethod: 'GET'

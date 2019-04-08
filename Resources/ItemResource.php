@@ -28,6 +28,36 @@ class ItemResource extends AbstractResource
         return $this->request('get', ['itemId' => $itemId], Items::class);
     }
 
+    /**
+     * @param $itemId
+     * @param $folderDestinationId
+     * @param null $destinationName
+     * @return Items
+     * @throws \Exception
+     */
+    public function move($itemId, $folderDestinationId, $destinationName = null)
+    {
+        $params = [
+            'itemId'   => $itemId,
+            'postBody' => [
+                'parentReference' => [
+                    'id' => $folderDestinationId
+                ]
+            ]
+        ];
+        if (!is_null($destinationName)) {
+            $params['postBody']['name'] = $destinationName;
+        }
+        return $this->request('move', $params, Items::class);
+    }
+
+    /**
+     * @param $name
+     * @param null $folderId
+     * @param bool $conflictBehaviorRename
+     * @return Items
+     * @throws \Exception
+     */
     public function createFolder($name, $folderId = null, $conflictBehaviorRename = true) {
         $postBody = [
             'name' => $name,

@@ -17,12 +17,16 @@ class Items
     public $downloadUrl;
     public $createdBy;
     public $lastModifiedBy;
+
+    /** @var ParentReference */
     public $parentReference;
+
     protected $folder;
+    /** @var $image Image */
     public $image;
     /* @var $video Video */
     public $video;
-    /* @var $video File */
+    /* @var $file File */
     public $file;
 
     /**
@@ -39,6 +43,19 @@ class Items
     public function setFile(File $file)
     {
         $this->file = $file;
+    }
+
+    public function setParentReference(ParentReference $ref)
+    {
+        $this->parentReference = $ref;
+    }
+
+    /**
+     * @return ParentReference
+     */
+    public function getParentReference()
+    {
+        return $this->parentReference;
     }
 
     /**
@@ -247,22 +264,6 @@ class Items
     public function setLastModifiedBy($lastModifiedBy)
     {
         $this->lastModifiedBy = $lastModifiedBy;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParentReference()
-    {
-        return $this->parentReference;
-    }
-
-    /**
-     * @param mixed $parentReference
-     */
-    public function setParentReference($parentReference)
-    {
-        $this->parentReference = $parentReference;
     }
 
     /**
