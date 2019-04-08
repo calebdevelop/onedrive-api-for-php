@@ -40,7 +40,7 @@ class MediaFileUpload
     {
         $this->client = $client;
         $this->resumable = $resumable;
-        $this->chunkSize = $chunkSize - 1;
+        $this->chunkSize = $chunkSize;
         $this->fileName = $fileName;
         $this->folderId = $folderId;
         $this->item = new ItemResource($this->client);
