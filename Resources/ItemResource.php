@@ -30,6 +30,27 @@ class ItemResource extends AbstractResource
 
     /**
      * @param $itemId
+     * @param array $properties
+     * @return Items
+     * @throws \Exception
+     */
+    public function update($itemId, array $properties)
+    {
+        $params = [
+            'itemId' => $itemId,
+            'postBody' => $properties
+        ];
+
+        return $this->request('update', $params, Items::class);
+    }
+
+    public function delete($itemId)
+    {
+        return $this->request('delete', ['itemId' => $itemId]);
+    }
+
+    /**
+     * @param $itemId
      * @param $folderDestinationId
      * @param null $destinationName
      * @return Items

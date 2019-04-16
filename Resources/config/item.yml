@@ -33,6 +33,24 @@ methods:
                 type: 'string'
                 required: true
 
+    update:
+        path: 'me/drive/items/{itemId}'
+        httpMethod: 'PATCH'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
+    delete:
+        path: 'me/drive/items/{itemId}'
+        httpMethod: 'DELETE'
+        parameters:
+            itemId:
+                location: 'path'
+                type: 'string'
+                required: true
+
     getItemByPath:
         path: 'me/drive/root:/{itemPath}'
         httpMethod: 'GET'
