@@ -62,3 +62,13 @@ while (!feof($handle)) {
 echo 'FileId : ' . $res['id'];
 print_r($res)
 ```
+##### Create folder
+```
+$service = new OneDriveService($client);
+$service->items->createFolder("folder_name");
+```
+On this sample, `folder_name` is create in root folder. 
+You can also create a subdirectory by adding folderId as a second parameter.
+```
+$service->items->createFolder("folder_name", "parent_folder_id");
+```
